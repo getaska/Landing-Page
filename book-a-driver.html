@@ -34,16 +34,33 @@
     .whatsapp-cta:hover { background: #1ebe5a; }
     .whatsapp-icon { width: 22px; height: 22px; }
     .book-form-card { background: #fff; border-radius: 24px; padding: 40px; border: 1px solid #eff0f6; box-shadow: 0 2px 7px 0 rgba(20,20,43,.06); }
-    .book-form-card select.brix---input,
-    .book-form-card select.w-input {
+    /* iOS Safari select fix: appearance:none gives full control; custom arrow via background-image */
+    .book-form-card select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
       color: #373737 !important;
       -webkit-text-fill-color: #373737 !important;
       background-color: #fff !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath fill='%23373737' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 18px center;
+      background-size: 20px;
+      padding: 16px 48px 16px 24px !important;
+      height: auto !important;
+      min-height: 60px;
+      line-height: 1.5;
+      display: block;
+      width: 100%;
+      border-radius: 100px;
+      border: 1px solid var(--elements-webflow-library--neutral--300);
+      box-shadow: 0 2px 7px 0 rgba(20,20,43,.08);
+      font-size: 16px;
+      cursor: pointer;
       opacity: 1 !important;
     }
-    .book-form-card select.brix---input option {
+    .book-form-card select option {
       color: #373737;
-      -webkit-text-fill-color: #373737;
       background-color: #fff;
     }
     @media (max-width: 767px) {
@@ -233,7 +250,7 @@
                 </div>
                 <div style="grid-column: 1 / span 2;">
                   <label class="brix---input-label" for="bd-service">Service Type</label>
-                  <select class="brix---input w-input" id="bd-service" name="service" required="" style="cursor:pointer;color:#373737;background-color:#fff;-webkit-appearance:menulist;appearance:menulist;">
+                  <select class="brix---input w-input" id="bd-service" name="service" required="">
                     <option value="" disabled selected>Select a service</option>
                     <option value="Chauffeur Service (12 Hours)">Chauffeur Service (12 Hours)</option>
                     <option value="Chauffeur Service (24 Hours)">Chauffeur Service (24 Hours)</option>
@@ -246,7 +263,7 @@
                 </div>
                 <div style="grid-column: 1 / span 2;">
                   <label class="brix---input-label" for="bd-vehicle">Vehicle Choice</label>
-                  <select class="brix---input w-input" id="bd-vehicle" name="vehicle" required="" style="cursor:pointer;color:#373737;background-color:#fff;-webkit-appearance:menulist;appearance:menulist;">
+                  <select class="brix---input w-input" id="bd-vehicle" name="vehicle" required="">
                     <option value="" disabled selected>Select a vehicle</option>
                     <option value="Toyota Corolla 2016">Toyota Corolla 2016</option>
                     <option value="Toyota Prado" disabled>Toyota Prado (Coming Soon)</option>
