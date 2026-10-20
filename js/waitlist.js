@@ -1,21 +1,56 @@
-const thisForm = document.getElementById('email-form');
-thisForm.addEventListener('submit', async function (e) {
+// Paste the Web App URL from your Google Apps Script deployment here (ends in /exec).
+// See documents/waitlist-apps-script.gs for the script to deploy.
+var WAITLIST_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzuzCmOT4r5CQv3NQEeUp8TNUOsEzbEgsWv1v-cPiUK74lBBQo4lq-NzUgja0ZfyD73cQ/exec';
+
+var thisForm = document.getElementById('email-form');
+if (thisForm) {
+  var submitBtn  = document.getElementById('waitlist-submit');
+  var btnTextEl  = document.getElementById('waitlist-btn-text');
+  var isSubmitting = false;
+
+  thisForm.addEventListener('submit', async function (e) {
     e.preventDefault();
-    const formData = new FormData(thisForm).entries()
-    const response = await fetch('https://api.getaska.com/api/public/waiting-list', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(formData))
-    });
-    const result = await response.json();
-    if (response.ok){
-      document.getElementById("email-message").innerHTML = "<span style='color: green;'>Thank you! Your submission has been received!</span>";
-      }
-    else if (result.errors[0].msg === "E-mail already in use"){
-      document.getElementById("email-message").innerHTML = "<span style='color: orange;'>Email already registered</span>"; 
+    if (isSubmitting) return;
+
+    var messageEl = document.getElementById('email-message');
+    var email = (new FormData(thisForm)).get('email') || '';
+
+    if (!WAITLIST_ENDPOINT || WAITLIST_ENDPOINT.indexOf('PASTE_YOUR') === 0) {
+      messageEl.innerHTML = "<span style='color:red;'>Waitlist isn't connected yet — set WAITLIST_ENDPOINT in js/waitlist.js</span>";
+      return;
     }
-      else
-      {
-        document.getElementById("email-message").innerHTML = "<span style='color: red;'>Oops! Something went wrong, please try again </span>";
+
+    isSubmitting = true;
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.classList.add('is-loading');
+    }
+    if (btnTextEl) btnTextEl.textContent = 'Joining...';
+
+    try {
+      var response = await fetch(WAITLIST_ENDPOINT, {
+        method: 'POST',
+        // text/plain avoids a CORS preflight that Apps Script web apps don't handle.
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ email: email })
+      });
+      var result = await response.json();
+
+      if (result.ok) {
+        messageEl.innerHTML = "<span style='color:green;'>Thank you! You're on the waitlist.</span>";
+        thisForm.reset();
+      } else {
+        messageEl.innerHTML = "<span style='color:red;'>" + (result.error || 'Something went wrong, please try again.') + "</span>";
       }
-});
+    } catch (err) {
+      messageEl.innerHTML = "<span style='color:red;'>Oops! Something went wrong, please try again.</span>";
+    } finally {
+      isSubmitting = false;
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('is-loading');
+      }
+      if (btnTextEl) btnTextEl.textContent = 'Join';
+    }
+  });
+}

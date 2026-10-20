@@ -1318,7 +1318,9 @@ h3 {
   }
 
   .button-primary {
-    display: none;
+    display: block;
+    width: 100%;
+    text-align: center;
   }
 
   .menu-button {
