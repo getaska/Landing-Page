@@ -2,6 +2,12 @@
 // See documents/waitlist-apps-script.gs for the script to deploy.
 var WAITLIST_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzuzCmOT4r5CQv3NQEeUp8TNUOsEzbEgsWv1v-cPiUK74lBBQo4lq-NzUgja0ZfyD73cQ/exec';
 
+function waitlistEscapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
 var thisForm = document.getElementById('email-form');
 if (thisForm) {
   var submitBtn  = document.getElementById('waitlist-submit');
@@ -40,7 +46,7 @@ if (thisForm) {
         messageEl.innerHTML = "<span style='color:green;'>Thank you! You're on the waitlist.</span>";
         thisForm.reset();
       } else {
-        messageEl.innerHTML = "<span style='color:red;'>" + (result.error || 'Something went wrong, please try again.') + "</span>";
+        messageEl.innerHTML = "<span style='color:red;'>" + waitlistEscapeHtml(result.error || 'Something went wrong, please try again.') + "</span>";
       }
     } catch (err) {
       messageEl.innerHTML = "<span style='color:red;'>Oops! Something went wrong, please try again.</span>";

@@ -429,7 +429,7 @@ function buildMessage() {
     'Destination: ' + destination +
     (dateInfo ? '\n\n' + dateInfo : '');
 
-  window.open('https://wa.me/' + GETASKA_WHATSAPP + '?text=' + encodeURIComponent(message), '_blank');
+  window.open('https://wa.me/' + GETASKA_WHATSAPP + '?text=' + encodeURIComponent(message), '_blank', 'noopener');
 }
 
 /* ── Reset whole wizard ──────────────────────────────────────── */
